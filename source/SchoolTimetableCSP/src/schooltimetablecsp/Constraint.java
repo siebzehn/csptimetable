@@ -13,5 +13,7 @@ public abstract class Constraint
 {
     int level = -1;
 
-    abstract public boolean valid(Dispo tt[][], int day, Subject ss);
+    abstract public boolean valid(Subject ss, Dispo dd);
+    abstract public int valid(Subject ss, Day dd);
+    abstract public boolean valid(Dispo d1, Dispo d2);
 }

@@ -5,39 +5,54 @@
 
 package schooltimetablecsp;
 
+
+import java.util.Iterator;
 /**
  *
  * @author five_stars
  */
-public class LastHourConstraint extends HardConstraint
+public class LastHourConstraint extends Constraint
 {
-    public boolean valid(Dispo tt[][], int day, Subject ss)
+    double level = 0.5;
+
+    public LastHourConstraint(double ll)
     {
-        return false;
+        this.level = ll;
     }
-    public boolean valid(Dispo tt[][], int day, Subject ss, int hour)
+    
+    public boolean valid(Subject ss, Dispo dd)
     {
         boolean res = true;
         if (ss.n_slot_assigned > 0)
         {
-            FlexiTime prec = null;
             int count = 0;
-            for (int i = 0; i < 6; i++)
+            FlexiTime ft = dd.getFlexiTime();
+
+            Iterator it = ss.assigned.iterator();
+            while(it.hasNext())
             {
-                //System.out.println("\t Day: " + i);
-                if (tt[i][hour].s != null)
-                    if (tt[i][hour].s == ss)
+                Dispo temp_d = (Dispo) it.next();
+                if (temp_d.h != null)
+                {
+                    if (temp_d.h == ft)
                     {
-                        FlexiTime ft = tt[i][hour].getFlexiTime();
-                        if (ft.equals(prec))
-                            count ++;
-                        else
-                            prec = ft;
+                        count ++;
                     }
+                }
             }
-            if (( ((double)count)/((double)ss.n_slot_assigned) ) >= 0.5)
+            if (( ((double)count)/((double)ss.n_slot_assigned) ) >= this.level)
                 res = false;
         }
         return res;
+    }
+
+    @Override
+    public int valid(Subject ss, Day dd) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean valid(Dispo d1, Dispo d2) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

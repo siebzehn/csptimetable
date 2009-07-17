@@ -105,7 +105,7 @@ public class Rules {
         boolean res = false;
         // CONSTRAINTS
         // non nello stesso giorno
-        DayConstraint dc = new DayConstraint();
+/*        DayConstraint dc = new DayConstraint();
         // non giorni consecutivi
         SpreadConstraint sc = new SpreadConstraint();
         // non sempre ultima ora
@@ -115,7 +115,7 @@ public class Rules {
         boolean b_sc = sc.valid(tt, index_day, to_add);
         boolean b_lhc = lhc.valid(tt, index_day, to_add, index_time);
         res = b_dc && b_sc && b_lhc;
-        
+  */
         return res;
     }
 }
