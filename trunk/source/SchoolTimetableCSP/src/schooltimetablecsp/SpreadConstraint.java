@@ -5,40 +5,57 @@
 
 package schooltimetablecsp;
 
+import java.util.Iterator;
 /**
  *
  * @author five_stars
  */
-public class SpreadConstraint extends HardConstraint
+public class SpreadConstraint extends Constraint
 {
-   /* public SpreadConstraint(int ll)
+    double level = 0.5;
+
+    public SpreadConstraint(double ll)
     {
         this.level = ll;
-    }*/
+    }
     
-    public boolean valid(Dispo tt[][], int day, Subject ss)
+    public int valid(Subject ss, Day day)
     {
-        boolean res = true;
-        if (day > 0)
+        double counter = 0;
+        Iterator it = ss.assigned.iterator();
+        while(it.hasNext())
         {
-            int temp = day - 1;
-            for (int j = 0; j < 5; j++)
+            Dispo temp_d = (Dispo) it.next();
+            if (temp_d.j.numDay == (day.numDay+1))
             {
-                if (tt[temp][j].s != null)
-                    if (tt[temp][j].s == ss)
-                        res = false;
+                counter += 1;
+            }
+            else if (temp_d.j.numDay == (day.numDay-1))
+            {
+                counter += 1;
+            }
+            else if(temp_d.j.numDay == day.numDay)
+            {
+                counter += 1;
             }
         }
-        if (day < 5)
-        {
-            int temp = day + 1;
-            for (int j = 0; j < 5; j++)
-            {
-                if (tt[temp][j].s != null)
-                    if (tt[temp][j].s == ss)
-                        res = false;
-            }
-        }
-        return res;
+        double val = 0;
+        if (counter > 0)
+            val = counter/((double)ss.assigned.size());
+
+        if (val > this.level)
+            return -1;
+        else
+            return 0;
+    }
+
+    @Override
+    public boolean valid(Subject ss, Dispo dd) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean valid(Dispo d1, Dispo d2) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
