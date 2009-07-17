@@ -138,7 +138,7 @@ public class Solver
         //List<Subject> added = new LinkedList<Subject>();
         //added.add(first);
         Node root = new Node (null, first);
-        DFS dfs = new DFS();
+        DFS dfs = new DFS(0.5, 0.5);
         List ssss = new LinkedList<Subject>();
         Collections.shuffle(this.available_slot);
         this.fillDomain(courses);

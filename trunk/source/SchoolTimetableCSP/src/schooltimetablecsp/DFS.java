@@ -15,9 +15,28 @@ import java.util.LinkedList;
  */
 public class DFS
 {
-    String timetable[][] = new String[6][5];
-    private List<Dispo> backjumping = new LinkedList<Dispo>();
-    Dispo template = new Dispo(new Day(7), new FlexiTime(0,1,0), 0);
+    Dispo template;
+    String timetable[][];
+    private List<Dispo> backjumping;
+
+    SpreadConstraint spread_day;
+    DayConstraint day;
+    LastHourConstraint not_last;
+    DoubleHourConstraint double_hour;
+    ConsecutiveHourConstraint cont_hour;
+
+    public DFS(double sc, double lhc)
+    {
+        this.spread_day = new SpreadConstraint(sc);
+        this.day        = new DayConstraint();
+        this.not_last   = new LastHourConstraint(lhc);
+        this.double_hour= new DoubleHourConstraint();
+        this.cont_hour  = new ConsecutiveHourConstraint();
+
+        this.template = new Dispo(new Day(7), new FlexiTime(0,1,0), 0);
+        this.timetable = new String[6][5];
+        this.backjumping = new LinkedList<Dispo>();
+    }
 
     public Dispo dfsVist(Node root, List<Dispo> available_slot, List<Subject> to_assign, List<Subject> assigned, String preprint, Dispo last_assigned) throws InterruptedException
     {
@@ -320,13 +339,13 @@ public class DFS
                 if (temp_d.j.getNum() == dd.j.getNum())
                 {
                     //verifica se il corso ammette piu' di due ore consecutive
-                    if (ss.couple)
+                    if ( this.double_hour.valid(ss, dd) )
                     {
                         //verifica se le ore sono consecutive
-                        if ( temp_d.key == dd.key+1 || temp_d.key == dd.key-1)
+                        if ( this.cont_hour.valid(temp_d, dd) )
                         {
                             //verifica che non ci siano gia' piu' di due ore in quel giorno
-                            if (this.checkCouple(ss, temp_d.j) < 2)
+                            if ( this.day.valid(ss, temp_d.j) < 2 )
                             {
                                 //se non ci sono => OK
                                 res = true ;
@@ -352,14 +371,14 @@ public class DFS
                 else
                 {
                     //verifica la distribuzione delle ore (eg: non sempre la stessa)
-                    if (this.notLast(ss, dd))
+                    if ( this.not_last.valid(ss, dd) )
                     {
                         //TODO: deve diventare un soft constraint => peso
                         //verifica la distribuzione nei giorni (non giorni consecutivi)
-                        if ( this.checkDay(ss, dd.j)==0 )
+                        if ( this.spread_day.valid(ss, dd.j)==0 )
                         {
                             //verifica che non ci siano gia' piu' di due ore in quel giorno
-                            if (this.checkCouple(ss, dd.j) < 2)
+                            if (this.day.valid(ss, dd.j) < 2)
                             {
                                 res = res && true;
                             }
@@ -381,7 +400,6 @@ public class DFS
                         break;
                     }
                 }
-
             }
             else
             {
@@ -404,9 +422,9 @@ public class DFS
             //verifica se sono nello stesso giorno
             if (d1.j.getNum() == d2.j.getNum())
             {//verifica se il corso ammette piu' di due ore consecutive
-                if (d1.s.couple)
+                if ( this.double_hour.valid(d1.s, d1) )
                 {
-                    if ( d1.key == d2.key+1 || d1.key == d2.key-1)
+                    if ( this.cont_hour.valid(d1, d2) )
                     {
                         return true;
                     }
@@ -418,9 +436,9 @@ public class DFS
             else
             {
                 //verifica la distribuzione delle ore (eg: non sempre la stessa)
-                if (this.notLast(d1.s, d2))
+                if ( this.not_last.valid(d1.s, d2) )
                 {
-                    if ( this.checkDay(d1.s, d2.j)==0 )
+                    if ( this.spread_day.valid(d1.s, d2.j)==0 )
                     {
                         return true;
                     }
@@ -429,77 +447,6 @@ public class DFS
         }
 
         return false;
-    }
-
-    public int checkCouple(Subject ss, Day day)
-    {
-        int res = 0;
-        Iterator it = ss.assigned.iterator();
-        while(it.hasNext())
-        {
-            Dispo temp_d = (Dispo) it.next();
-            if (temp_d.j == day)
-            {
-                res ++;
-            }
-        }
-        return res;
-    }
-
-    public int checkDay(Subject ss, Day day)
-    {
-        double counter = 0;
-        Iterator it = ss.assigned.iterator();
-        while(it.hasNext())
-        {
-            Dispo temp_d = (Dispo) it.next();
-            if (temp_d.j.numDay == (day.numDay+1))
-            {
-                counter += 1;
-            }
-            else if (temp_d.j.numDay == (day.numDay-1))
-            {
-                counter += 1;
-            }
-            else if(temp_d.j.numDay == day.numDay)
-            {
-                counter += 1;
-            }
-        }
-        double val = 0;
-        if (counter > 0)
-            val = counter/((double)ss.assigned.size());
-
-        if (val > 0.5)
-            return -1;
-        else
-            return 0;
-    }
-
-    public boolean notLast(Subject ss, Dispo dd)
-    {
-        boolean res = true;
-        if (ss.n_slot_assigned > 0)
-        {
-            int count = 0;
-            FlexiTime ft = dd.getFlexiTime();
-
-            Iterator it = ss.assigned.iterator();
-            while(it.hasNext())
-            {
-                Dispo temp_d = (Dispo) it.next();
-                if (temp_d.h != null)
-                {
-                    if (temp_d.h == ft)
-                    {
-                        count ++;
-                    }
-                }
-            }
-            if (( ((double)count)/((double)ss.n_slot_assigned) ) >= 0.5)
-                res = false;
-        }
-        return res;
     }
 
     public boolean fwdChecking(Collection<Node> ss)
