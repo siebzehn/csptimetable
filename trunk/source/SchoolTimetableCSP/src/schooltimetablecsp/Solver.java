@@ -5,7 +5,6 @@
 
 package schooltimetablecsp;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -65,39 +64,7 @@ public class Solver
     public Subject createSubj(int index, String n, int s, boolean couple)
     {
         Subject ss = new Subject(index, n, s, couple);
-
-        List<WeekDay> week = new LinkedList<WeekDay>();
-        week.add(WeekDay.Monday);
-        week.add(WeekDay.Tuestday);
-        week.add(WeekDay.Wednesday);
-        week.add(WeekDay.Thursday);
-        week.add(WeekDay.Fryday);
-        week.add(WeekDay.Saturday);
-
-        List<Slot> day = new LinkedList<Slot>();
-        day.add(new Slot(8, 9));
-        day.add(new Slot(9, 10));
-        day.add(new Slot(10, 11));
-        day.add(new Slot(11, 12));
-        day.add(new Slot(12, 13));
-
         return ss;
-    }
-
-    public void visit(Node root)
-    {
-        Rules rl = new Rules();
-        if (root.hasChildren())
-        {
-            Collection<Node> child = root.figli();
-            Iterator<Node> it = child.iterator();
-            while (it.hasNext())
-            {
-                Node nn = it.next();
-                System.out.println(((Subject) nn.value()).name );
-                rl.getSubjectSlot((Subject)nn.value(), timetable);
-            }
-        }
     }
 
     public void start()
@@ -118,47 +85,20 @@ public class Solver
         courses.add(createSubj(11, "Scienze della Terra",2, false));
         courses.add(createSubj(12, "Educazione Fisica",2, true));
 
-        Rules rl = new Rules();
-        Subject first = rl.chooseFirst(courses);
-        //rl.getSubjectSlot(first, timetable);
-        //List<Subject> added = new LinkedList<Subject>();
-        //added.add(first);
+        Subject first = Heuristic.chooseFirst(courses);
         Node root = new Node (null, first);
         DFS dfs = new DFS(0.5, 0.5);
         List ssss = new LinkedList<Subject>();
         Collections.shuffle(this.available_slot);
         this.fillDomain(courses);
-        boolean result = false;
         Dispo dd = null;
         try {
-            //result = dfs.dfsVist(root, available_slot, courses, ssss, "", null);
             dd = dfs.dfsVist(root, available_slot, courses, ssss, "", new Dispo(new Day(7), new FlexiTime(0,1,0), 0) );
         } catch (InterruptedException ex) {
             Logger.getLogger(Solver.class.getName()).log(Level.SEVERE, null, ex);
         }
         System.out.println("\n Result: ["+ dd +"]");
-        dfs.printTT();//courses);
-        /*Iterator it = courses.iterator();
-        while (it.hasNext())
-        {
-            Subject s_temp = (Subject) it.next();
-            if (!added.contains(s_temp))
-            {
-                root.addChildren( new Node(root, s_temp) );
-            }
-        }
-
-        this.visit(root);
-
-        for (int i = 0; i < 6; i++)
-        {
-            for (int j = 0; j < 5; j++)
-                if (timetable[i][j].s != null)
-                    System.out.print(timetable[i][j].s.name + "\t");
-                else
-                    System.out.print("  ***  ");
-            System.out.println(" ");
-        }*/
+        dfs.printTT();
     }
 
     public void fillDomain(List<Subject> ss)
