@@ -62,9 +62,9 @@ public class Solver
         }
     }
 
-    public Subject createSubj(String n, int s, boolean couple)
+    public Subject createSubj(int index, String n, int s, boolean couple)
     {
-        Subject ss = new Subject(n, s, couple);
+        Subject ss = new Subject(index, n, s, couple);
 
         List<WeekDay> week = new LinkedList<WeekDay>();
         week.add(WeekDay.Monday);
@@ -80,20 +80,6 @@ public class Solver
         day.add(new Slot(10, 11));
         day.add(new Slot(11, 12));
         day.add(new Slot(12, 13));
-
-
-        Iterator<WeekDay> it = week.iterator();
-        while(it.hasNext())
-        {
-            WeekDay wd = it.next();
-            Iterator<Slot> it2 = day.iterator();
-            while(it2.hasNext())
-            {
-                Slot temp = it2.next();
-                temp.setDay(wd);
-                ss.addDomain( temp );
-            }
-        }
 
         return ss;
     }
@@ -119,18 +105,18 @@ public class Solver
         //Node root = new Node(null, null);
 
         List<Subject> courses = new LinkedList<Subject>();
-        courses.add(createSubj("Letteratura",4, true));
-        courses.add(createSubj("Religione",1, false));
-        courses.add(createSubj("Chimica",2, true));
-        courses.add(createSubj("Filosofia",2, false));
-        courses.add(createSubj("Storia",2, false));
-        courses.add(createSubj("Inglese",3, false));
-        courses.add(createSubj("Matematica",4, true));
-        courses.add(createSubj("Informatica",3, true));
-        courses.add(createSubj("Fisica",3, true));
-        courses.add(createSubj("Biologia",2, false));
-        courses.add(createSubj("Scienze della Terra",2, false));
-        courses.add(createSubj("Educazione Fisica",2, true));
+        courses.add(createSubj(1, "Letteratura",4, true));
+        courses.add(createSubj(2, "Religione",1, false));
+        courses.add(createSubj(3, "Chimica",2, true));
+        courses.add(createSubj(4, "Filosofia",2, false));
+        courses.add(createSubj(5, "Storia",2, false));
+        courses.add(createSubj(6, "Inglese",3, false));
+        courses.add(createSubj(7, "Matematica",4, true));
+        courses.add(createSubj(8, "Informatica",3, true));
+        courses.add(createSubj(9, "Fisica",3, true));
+        courses.add(createSubj(10, "Biologia",2, false));
+        courses.add(createSubj(11, "Scienze della Terra",2, false));
+        courses.add(createSubj(12, "Educazione Fisica",2, true));
 
         Rules rl = new Rules();
         Subject first = rl.chooseFirst(courses);
