@@ -226,4 +226,38 @@ public class Heuristic
 
         return false;
     }
+
+    static public Subject chooseFirst(List<Subject> subs)
+    {
+        Subject res = null;
+        Iterator it = subs.iterator();
+        if (it.hasNext())
+            res = (Subject) it.next();
+        while (it.hasNext())
+        {
+            Subject temp = (Subject) it.next();
+            //scelgo quello con il dominio piu' piccolo
+            if (temp.dominio.size() < res.dominio.size())
+                res = temp;
+            else
+                //se sono uguali => scelgo quello con piu' ore
+                if (temp.dominio.size() == res.dominio.size())
+                {
+                    double temp_val = ((double)temp.dominio.size())/((double)temp.n_slot);
+                    double res_val = ((double)res.dominio.size())/((double)res.n_slot);
+                    if (temp_val < res_val)
+                    {
+                        res = temp;
+                    }
+                    /*if (temp.level_hard > res.level_hard)
+                        res = temp;
+                    else
+                        if (temp.level_hard == res.level_hard)
+                            if (temp.level_soft > res.level_soft)
+                                res = temp;*/
+                }
+
+        }
+        return res;
+    }
 }
