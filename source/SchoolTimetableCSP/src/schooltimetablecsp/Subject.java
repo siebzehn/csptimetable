@@ -13,25 +13,37 @@ import java.util.LinkedList;
  */
 public class Subject
 {
+    public int id;
     public String name;
     public int n_slot;
     public boolean couple;
     public int n_slot_assigned = 0;
     public List<Dispo> dominio;
     public List<Dispo> assigned;
-    //public List<List<Slot>> dominio;
+    public Teacher insegnante;
+    public LeisureClass classe;
     int level_hard = -1;
     int level_soft = -1;
 
-//    public List<Object> constraint;
-
-    public Subject (String n, int s, boolean c)
+    public Subject (int i, String n, int s, boolean c)
     {
+        this.id     = i;
         this.name   = n;
         this.n_slot = s;
         this.couple = c;
         this.dominio = new LinkedList<Dispo>();
-        //this.dominio = new LinkedList<List<Slot>>();
+        this.assigned = new LinkedList<Dispo>();
+    }
+
+    public Subject (int i, String n, int s, boolean c, Teacher t, LeisureClass lc)
+    {
+        this.id         = i;
+        this.name       = n;
+        this.n_slot     = s;
+        this.couple     = c;
+        this.insegnante = t;
+        this.classe     = lc;
+        this.dominio = new LinkedList<Dispo>();
         this.assigned = new LinkedList<Dispo>();
     }
 
@@ -45,17 +57,10 @@ public class Subject
 
 	public boolean equals(Object o)
     {
-		if (o instanceof Subject && this.name.equals( ((Subject)o).name) )
+		if (o instanceof Subject && this.id == ((Subject)o).id )
             return true;
 		return false;
 	}
-
-    public void addDomain(Slot d)
-    {
-        Rules rul = new Rules();
-        //rul.getSubjectSlot(this);
-        //this.dominio.add(d);
-    }
 
     public String toString()
     {
