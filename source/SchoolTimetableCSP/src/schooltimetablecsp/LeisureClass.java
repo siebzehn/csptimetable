@@ -18,6 +18,7 @@ public class LeisureClass {
     protected char section;
     protected int tot_hour;
     protected List<Subject> modules;
+    protected String timetable[][];
 
     public LeisureClass(int i, int y, char s, int h)
     {

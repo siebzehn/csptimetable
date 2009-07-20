@@ -69,8 +69,6 @@ public class Solver
 
     public void start()
     {
-        //Node root = new Node(null, null);
-
         List<Subject> courses = new LinkedList<Subject>();
         courses.add(createSubj(1, "Letteratura",4, true));
         courses.add(createSubj(2, "Religione",1, false));

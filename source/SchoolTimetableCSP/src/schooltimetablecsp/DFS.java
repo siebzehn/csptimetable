@@ -42,6 +42,7 @@ public class DFS
             System.out.println(preprint + process_ss);
 
             List<Dispo> tried_dd = new LinkedList<Dispo>();
+            // itero tutti valori del dominio
             boolean to_try = true;
             while(to_try && result != null)
             {
@@ -54,6 +55,7 @@ public class DFS
                 {
                     available_slot.remove(temp_ds);
                     this.timetable[temp_ds.j.numDay-1][temp_ds.h.h-1] = process_ss.name;
+                    this.backjumping.add(0,temp_ds);
                     System.out.println(preprint + " ***" + temp_ds + "*** ");
                     // remove the assigned Dispo from all the subject
                     constr_prop.updateDomain(to_assign, temp_ds, true);
@@ -69,26 +71,25 @@ public class DFS
                     if (! assigned.contains(process_ss))
                         assigned.add(process_ss);
                     
-                    this.backjumping.add(0,temp_ds);
-
                     if (!(to_assign.size() == 0))
                     {
-                        //genera figli + corsi
+                        // genera figli + corsi
                         euristica.generateChild(root, to_assign);
 
-                        //forward checking
+                        // forward checking
                         if ( this.forward.fwdChecking(root.figli()) )
                         {
-                            //scorri figli
                             Iterator<Node> it = root.figli().iterator();
                             if (it.hasNext())
                             {
                                 Node temp_nd = it.next();
                                 result = this.dfsVist(temp_nd, available_slot, to_assign, assigned, preprint + "  ", temp_ds);
+                                // se null allora timetable completa
                                 if (result == null)
                                     to_try = false;
                                 else
                                 {
+                                    // backtracking
                                     if (result != temp_ds && result != this.template)
                                     {
                                         to_try = false;
@@ -98,16 +99,19 @@ public class DFS
                         }
                         else
                         {
+                            // backjumping
                             result = this.backCheck(process_ss, temp_ds);
                         }
                     }
                     else
                     {
+                        // timetable completa
                         result = null;
                         System.out.println(preprint + "Slot disponibili: " + available_slot.size() + " corsi non assegnati: " + to_assign.size());
                     }
                     this.backjumping.remove(0);
                     this.removeSlot(process_ss, temp_ds, available_slot);
+                    // re-add the assigned Dispo from all the subject
                     this.constr_prop.updateDomain(to_assign, temp_ds, false);
 
                     if (removed)
@@ -116,8 +120,10 @@ public class DFS
                     if ( result != null )
                         this.timetable[temp_ds.j.numDay-1][temp_ds.h.h-1] = null;
                 }
+                // slot orario non assegnata
                 else
                 {
+                    //backjumping
                     result = this.backCheck(process_ss, temp_ds);
 
                     System.out.print(preprint + "Slot disponibili: " + available_slot.size());
