@@ -7,7 +7,6 @@ package schooltimetablecsp;
 
 import java.util.List;
 import java.util.Iterator;
-import java.util.Collection;
 import java.util.LinkedList;
 /**
  *
@@ -24,7 +23,7 @@ public class DFS
 
     public DFS(double sc, double lhc)
     {
-        this.template = new Dispo(new Day(7), new FlexiTime(0,1,0), 0);
+        this.template = new Dispo(new Day(7), new FlexiTime(0,1,0), 0, null);
         this.timetable = new String[6][5];
         this.backjumping = new LinkedList<Dispo>();
         this.euristica = new Heuristic(sc, lhc);
@@ -32,14 +31,14 @@ public class DFS
         this.forward = new ForwardChecking();
     }
 
-    public Dispo dfsVist(Node root, List<Dispo> available_slot, List<Subject> to_assign, List<Subject> assigned, String preprint, Dispo last_assigned) throws InterruptedException
+    public Dispo dfsVist(Node root, List<Dispo> available_slot, List<Subject> to_assign, List<Subject> assigned, String preprint, Dispo last_assigned, List<LeisureClass> scuola) throws InterruptedException
     {
         Dispo result = last_assigned;
         boolean removed = false;
         if (root != null)
         {
             Subject process_ss = (Subject)root.value();
-            System.out.println(preprint + process_ss);
+            System.out.println(preprint + process_ss + " " + process_ss.classe.year + process_ss.classe.section);
 
             List<Dispo> tried_dd = new LinkedList<Dispo>();
             // itero tutti valori del dominio
@@ -83,7 +82,7 @@ public class DFS
                             if (it.hasNext())
                             {
                                 Node temp_nd = it.next();
-                                result = this.dfsVist(temp_nd, available_slot, to_assign, assigned, preprint + "  ", temp_ds);
+                                result = this.dfsVist(temp_nd, available_slot, to_assign, assigned, preprint + " ", temp_ds, scuola);
                                 // se null allora timetable completa
                                 if (result == null)
                                     to_try = false;
@@ -120,7 +119,7 @@ public class DFS
                     if ( result != null )
                         this.timetable[temp_ds.j.numDay-1][temp_ds.h.h-1] = null;
                 }
-                // slot orario non assegnata
+                // slot orario non assegnato
                 else
                 {
                     //backjumping
@@ -163,15 +162,20 @@ public class DFS
     public void printTT()
     {
         System.out.println();
-        for (int i = 0; i < 5; i++)
+        for (int c = 0; c < this.timetable.length; c ++)
         {
-            for (int j = 0; j < 6; j++)
+            for (int i = 0; i < 5; i++)
             {
-                System.out.print(this.timetable[j][i] + "    \t");
+                for (int j = 0; j < 6; j++)
+                {
+                    System.out.print(this.timetable[j][i] + "    \t");
+                }
+                System.out.println();
             }
             System.out.println();
         }
         System.out.println();
+
     }
 
     public void removeSlot(Subject ss, Dispo dd, List<Dispo> assignable)

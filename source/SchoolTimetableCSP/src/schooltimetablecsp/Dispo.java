@@ -15,13 +15,15 @@ public class Dispo implements Comparable
     protected FlexiTime h;
 	protected Day j;
     protected Subject s;
+    protected LeisureClass cc;
 
-	public Dispo(Day j, FlexiTime h, int k)
+	public Dispo(Day j, FlexiTime h, int k, LeisureClass c)
     {
 		this.j=j;
 		this.h=h;
         this.s=null;
         this.key = k;
+        this.cc = c;
 	}
 
 	public int compareTo(Object o)

@@ -6,6 +6,7 @@
 package schooltimetablecsp;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.LinkedList;
@@ -20,8 +21,82 @@ public class Solver
     Dispo timetable[][] = new Dispo[6][5];
     List<Dispo> available_slot = null;
 
+    Teacher t1 = new Teacher(1, "a", new Day(1)); // letteratura
+    Teacher t2 = new Teacher(2, "b", new Day(2)); // matematica
+    Teacher t3 = new Teacher(3, "c", new Day(3)); // filosofia - storia
+    Teacher t4 = new Teacher(4, "d", new Day(6)); // chimica - fisica
+    Teacher t5 = new Teacher(5, "e", new Day(3)); // inglese
+    Teacher t6 = new Teacher(6, "f", new Day(4)); // biologia - scienze
+    Teacher t7 = new Teacher(7, "g", new Day(5)); // religione
+    Teacher t8 = new Teacher(8, "h", new Day(1)); // educazione fisica
+    Teacher t9 = new Teacher(9, "i", new Day(6)); // informatica
+
     public Solver()
     {
+        available_slot = new LinkedList<Dispo>();
+    }
+
+    public Subject createSubj(int index, String n, int s, boolean couple, Teacher t, LeisureClass l)
+    {
+        Subject ss = new Subject(index, n, s, couple, t, l);
+        return ss;
+    }
+
+    public void start()
+    {
+        LeisureClass prima_a = new LeisureClass(1, 1, 'A', 30);
+        LeisureClass seconda_a = new LeisureClass(2, 2, 'A', 30);
+        LeisureClass terza_a = new LeisureClass(3, 3, 'A', 30);
+        LeisureClass quarta_a = new LeisureClass(4, 4, 'A', 30);
+        LeisureClass quinta_a = new LeisureClass(5, 5, 'A', 30);
+
+        LeisureClass prima_b = new LeisureClass(6, 1, 'B', 30);
+        LeisureClass seconda_b = new LeisureClass(7, 2, 'B', 30);
+        LeisureClass terza_b = new LeisureClass(8, 3, 'B', 30);
+        LeisureClass quarta_b = new LeisureClass(9, 4, 'B', 30);
+        LeisureClass quinta_b = new LeisureClass(10, 5, 'B', 30);
+
+        LeisureClass prima_c = new LeisureClass(11, 1, 'C', 30);
+        LeisureClass seconda_c = new LeisureClass(12, 2, 'C', 30);
+        LeisureClass terza_c = new LeisureClass(13, 3, 'C', 30);
+        LeisureClass quarta_c = new LeisureClass(14, 4, 'C', 30);
+        LeisureClass quinta_c = new LeisureClass(15, 5, 'C', 30);
+
+        LeisureClass prima_d = new LeisureClass(16, 1, 'D', 30);
+        LeisureClass seconda_d = new LeisureClass(17, 2, 'D', 30);
+        LeisureClass terza_d = new LeisureClass(18, 3, 'D', 30);
+        LeisureClass quarta_d = new LeisureClass(19, 4, 'D', 30);
+        LeisureClass quinta_d = new LeisureClass(20, 5, 'D', 30);
+
+        List<Subject> courses = new LinkedList<Subject>();
+
+        List<LeisureClass> scuola = new LinkedList<LeisureClass>();
+        scuola.add(prima_a);
+        scuola.add(seconda_a);
+        scuola.add(terza_a);
+        scuola.add(quarta_a);
+/*        scuola.add(quinta_a);
+*/
+/*        scuola.add(prima_b);
+        scuola.add(seconda_b);
+        scuola.add(terza_b);
+        scuola.add(quarta_b);
+        scuola.add(quinta_b);
+*/
+/*        scuola.add(prima_c);
+        scuola.add(seconda_c);
+        scuola.add(terza_c);
+        scuola.add(quarta_c);
+        scuola.add(quinta_c);
+*/
+       /* scuola.add(prima_d);
+        scuola.add(seconda_d);
+        scuola.add(terza_d);
+        scuola.add(quarta_d);
+        scuola.add(quinta_d);
+*/
+        Iterator it = scuola.iterator();
+
         FlexiTime hour_slot [] = new FlexiTime[5];
         FlexiTime h1 = new FlexiTime(8, 9, 1);
 		FlexiTime h2 = new FlexiTime(9, 10, 2);
@@ -48,55 +123,59 @@ public class Solver
         day_slot[4] = d5;
         day_slot[5] = d6;
 
-        int count = 1;
-        available_slot = new LinkedList<Dispo>();
-        for (int i = 0; i <= 5; i++)
+        List <Dispo> to_print = new LinkedList<Dispo>();
+
+        while(it.hasNext())
         {
-            for (int j = 0; j <= 4; j++)
+            LeisureClass temp = (LeisureClass) it.next();
+            this.addCorsi(temp);
+            courses.addAll(temp.modules);
+
+            int count = 1;
+            for (int i = 0; i <= 5/*1*/; i++)
             {
-                //this.timetable[i][j] = new Dispo(day_slot[i], hour_slot[j]);
-                available_slot.add(new Dispo(day_slot[i], hour_slot[j], count));
-                count ++;
+                for (int j = 0; j <= 4; j++)
+                {
+                    Dispo temp_d = new Dispo(day_slot[i], hour_slot[j], count, temp);
+                    available_slot.add(temp_d);
+                    to_print.add(temp_d);
+                    //System.out.println(temp_d + " " + temp);
+                    count ++;
+                }
             }
         }
-    }
-
-    public Subject createSubj(int index, String n, int s, boolean couple)
-    {
-        Subject ss = new Subject(index, n, s, couple);
-        return ss;
-    }
-
-    public void start()
-    {
-        List<Subject> courses = new LinkedList<Subject>();
-        courses.add(createSubj(1, "Letteratura",4, true));
-        courses.add(createSubj(2, "Religione",1, false));
-        courses.add(createSubj(3, "Chimica",2, true));
-        courses.add(createSubj(4, "Filosofia",2, false));
-        courses.add(createSubj(5, "Storia",2, false));
-        courses.add(createSubj(6, "Inglese",3, false));
-        courses.add(createSubj(7, "Matematica",4, true));
-        courses.add(createSubj(8, "Informatica",3, true));
-        courses.add(createSubj(9, "Fisica",3, true));
-        courses.add(createSubj(10, "Biologia",2, false));
-        courses.add(createSubj(11, "Scienze della Terra",2, false));
-        courses.add(createSubj(12, "Educazione Fisica",2, true));
 
         Subject first = Heuristic.chooseFirst(courses);
         Node root = new Node (null, first);
-        DFS dfs = new DFS(0.5, 0.5);
+        DeepSearch dfs = new DeepSearch( 0.5, 0.5, 20);
         List ssss = new LinkedList<Subject>();
         Collections.shuffle(this.available_slot);
         this.fillDomain(courses);
-        Dispo dd = null;
-        try {
-            dd = dfs.dfsVist(root, available_slot, courses, ssss, "", new Dispo(new Day(7), new FlexiTime(0,1,0), 0) );
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Solver.class.getName()).log(Level.SEVERE, null, ex);
+        Dispo template = new Dispo(new Day(7), new FlexiTime(0,1,0), 0, new LeisureClass(-1,-1,' ',-1));
+        Dispo dd = template;
+        Date start_d = new Date();
+        long start = System.currentTimeMillis();
+        while (dd != null)
+        {
+            dd = dfs.dfsVist(root, available_slot, courses, ssss, "", template, scuola );
+            Collections.shuffle(this.available_slot);
         }
-        System.out.println("\n Result: ["+ dd +"]");
+        long end = System.currentTimeMillis();
+
+        System.out.println("\n Result: ["+ dd +"] produced in [" + (((double)(end-start))/1000) + "]");
+        System.out.println(start_d + "  -  " + new Date());
         dfs.printTT();
+
+        System.out.println("         =====================\n");
+        t1.printTimeTable(to_print);
+        t2.printTimeTable(to_print);
+        t3.printTimeTable(to_print);
+        t4.printTimeTable(to_print);
+        t5.printTimeTable(to_print);
+        t6.printTimeTable(to_print);
+        t7.printTimeTable(to_print);
+        t8.printTimeTable(to_print);
+        t9.printTimeTable(to_print);
     }
 
     public void fillDomain(List<Subject> ss)
@@ -109,8 +188,26 @@ public class Solver
             while (it2.hasNext())
             {
                 Dispo temp_d = (Dispo) it2.next();
-                temp_s.dominio.add(temp_d);
+                if (temp_s.classe.id == temp_d.cc.id)
+                    temp_s.dominio.add(temp_d);
             }
         }
     }
+
+    public void addCorsi(LeisureClass classe)
+    {
+        classe.modules.add(createSubj(1+(12*classe.id), "Letteratura",4, true, t1, classe));
+        classe.modules.add(createSubj(2+(12*classe.id), "Religione",1, false, t7, classe));
+        classe.modules.add(createSubj(3+(12*classe.id), "Chimica",2, true, t4, classe));
+        classe.modules.add(createSubj(4+(12*classe.id), "Filosofia",2, false, t3, classe));
+        classe.modules.add(createSubj(5+(12*classe.id), "Storia",2, false, t3, classe));
+        classe.modules.add(createSubj(6+(12*classe.id), "Inglese",3, false, t5, classe));
+        classe.modules.add(createSubj(7+(12*classe.id), "Matematica",4, true, t2, classe));
+        classe.modules.add(createSubj(8+(12*classe.id), "Informatica",3, true, t9, classe));
+        classe.modules.add(createSubj(9+(12*classe.id), "Fisica",3, true, t4, classe));
+        classe.modules.add(createSubj(10+(12*classe.id), "Biologia",2, false, t6, classe));
+        classe.modules.add(createSubj(11+(12*classe.id), "Scienze della Terra",2, false, t6, classe));
+        classe.modules.add(createSubj(12+(12*classe.id), "Educazione Fisica",2, true, t8, classe));
+    }
+
 }

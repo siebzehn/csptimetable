@@ -26,6 +26,12 @@ public class LeisureClass {
         this.year = y;
         this.section = s;
         this.tot_hour = h;
+
         modules = new LinkedList<Subject>();
     }
+
+    public String toString()
+    {
+		return( Integer.toString(this.year) + Character.toString(this.section) );
+	}
 }
