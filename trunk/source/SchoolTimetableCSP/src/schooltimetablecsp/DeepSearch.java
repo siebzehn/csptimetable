@@ -31,9 +31,9 @@ public class DeepSearch
         this.forward = new ForwardChecking();
     }
 
-    public Dispo dfsVist(Node root, List<Dispo> available_slot, List<Subject> to_assign, List<Subject> assigned, String preprint, Dispo last_assigned, List<LeisureClass> scuola)
+    public Dispo dfsVist(Node root, List<Dispo> available_slot, List<Subject> to_assign, String preprint, Dispo last_assigned, List<LeisureClass> scuola)
     {
-        System.out.println("Slots: " + available_slot.size() + " Corsi: " + to_assign.size());
+        System.out.println("Slots: " + available_slot.size() + " Corsi: " + to_assign.size() + " Dominio: " + ((Subject)root.value()).dominio.size() );
         Dispo result = last_assigned;
         boolean removed = false;
         if (root != null)
@@ -47,13 +47,14 @@ public class DeepSearch
             while(to_try && result != null)
             {
                 //scegli slot per corso
+                List<Dispo> pre_domain = new LinkedList<Dispo>();
+                pre_domain.addAll(process_ss.dominio);
                 Dispo temp_ds = euristica.assignSlot(process_ss, tried_dd);
                 tried_dd.add(temp_ds);
 
                 //se la slot e' stata assegnata
                 if (temp_ds != null)
                 {
-                    //System.out.println(preprint + "Sizzzzzzzzzzzzzzzzzzzzzzze: " + process_ss.insegnante.teach_time.size() + " - " + assigned.size() + " - " );
                     available_slot.remove(temp_ds);
                     process_ss.insegnante.teach_time.add(temp_ds);
                     this.timetable[process_ss.classe.id-1][temp_ds.j.numDay-1][temp_ds.h.h-1] = process_ss.name;
@@ -71,25 +72,12 @@ public class DeepSearch
                         removed = true;
                     }
 
-                    if (! assigned.contains(process_ss))
-                        assigned.add(process_ss);
-
                     if (!(to_assign.size() == 0))
                     {
-
-                        // genera figli + corsi
                         Subject figghio = euristica.generateChild(root, to_assign);
-
-                        // forward checking
-                        /*if ( this.forward.fwdChecking( root.figli()) )
-                        {
-                            Iterator<Node> it = root.figli().iterator();
-                            if (it.hasNext())*/
                         if (figghio != null)
                         {
-                        //        Node temp_nd = it.next();
-                            result = this.dfsVist(/*temp_nd*/ new Node (root, figghio), available_slot, to_assign, assigned, preprint + " ", temp_ds, scuola);
-                            //System.out.println("ciao: " + result);
+                            result = this.dfsVist(new Node (root, figghio), available_slot, to_assign, preprint + " ", temp_ds, scuola);
                             // se null allora timetable completa
                             root.deleteChildrens();
                             if (result == null)
@@ -101,7 +89,6 @@ public class DeepSearch
                                 // backtracking
                                 if (result != temp_ds && result != this.template)
                                 {
-                                    //System.out.println("back...");
                                     to_try = false;
                                 }
                             }
@@ -110,19 +97,10 @@ public class DeepSearch
                         {
                             System.out.println("no childrens!");
                         }
-                        /*}
-                        else
-                        {
-                            root.deleteChildrens();
-                            // backjumping
-                            //System.out.println("backjumping fwd check");
-                            result = this.backCheck(process_ss, temp_ds);
-                        }*/
                     }
                     else
                     {
                         // timetable completa
-                        //System.out.println("." + temp_ds.s);
                         result = null;
                         System.out.println(preprint + "Slot disponibili: " + available_slot.size() + " corsi non assegnati: " + to_assign.size());
                     }
@@ -132,7 +110,8 @@ public class DeepSearch
                         this.removeSlot(process_ss, temp_ds, available_slot);
                         // re-add the assigned Dispo from all the subject
                         this.constr_prop.updateDomain(to_assign, temp_ds, false);
-
+                        process_ss.dominio.removeAll(pre_domain);
+                        process_ss.dominio.addAll(pre_domain);
                         if (removed)
                         {
                             if (!to_assign.contains(process_ss))
@@ -148,11 +127,9 @@ public class DeepSearch
                 // slot orario non assegnato
                 else
                 {
-                   // System.out.println(preprint + "***null***");
                     //backjumping
-                    result = this.backCheck(process_ss); //, temp_ds);
-/*
-                    System.out.print(preprint + "Slot disponibili: " + available_slot.size());
+                    result = this.backCheck(process_ss);
+/*                  System.out.print(preprint + "Slot disponibili: " + available_slot.size());
                     Iterator<Dispo> itt = available_slot.iterator();
                     while(itt.hasNext())
                     {
@@ -220,7 +197,7 @@ public class DeepSearch
         assignable.add(dd);
     }
 
-    public Dispo backCheck(Subject current_ss)//, Dispo last_dd)
+    public Dispo backCheck(Subject current_ss)
     {
         Dispo result = this.template;
         Iterator itc = current_ss.assigned.iterator();
