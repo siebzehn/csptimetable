@@ -61,4 +61,13 @@ public class Node
         return true;
     }
 
+    public void deleteChildrens()
+    {
+        for (int i = 0; i < this.childrens.size(); i ++)
+        {
+            this.childrens.remove(i);
+        }
+        //this.childrens = null;
+    }
+
 }

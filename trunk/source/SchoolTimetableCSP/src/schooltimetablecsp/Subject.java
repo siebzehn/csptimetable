@@ -50,8 +50,8 @@ public class Subject
     public int compareTo(Object o)
     {
 		Subject j = (Subject) o;
-		if (name.equals(j.name) ) return -1;
-		if (name.equals(j.name) ) return 1;
+		if (this.id == j.id ) return -1; //name.equals(j.name) ) return -1;
+		if (this.id == j.id ) return 1;//name.equals(j.name) ) return 1;
 		return 0;
 	}
 

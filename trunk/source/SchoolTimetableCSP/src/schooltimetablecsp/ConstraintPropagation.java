@@ -29,12 +29,15 @@ public class ConstraintPropagation
         while(it.hasNext())
         {
             Subject temp_s = (Subject) it.next();
-            // rimuovo la slot appena assegnata
-            if (flag)
-                temp_s.dominio.remove(dd);
-            // o aggiungo la slot appena ritornata
-            else
-                temp_s.dominio.add(dd);
+            if (temp_s.classe.id == dd.cc.id)
+            {
+                // rimuovo la slot appena assegnata
+                if (flag)
+                    temp_s.dominio.remove(dd);
+                // o aggiungo la slot appena ritornata
+                else
+                    temp_s.dominio.add(dd);
+            }
         }
     }
 
@@ -49,15 +52,18 @@ public class ConstraintPropagation
         while (it2.hasNext())
         {
             Dispo temp_d = (Dispo) it2.next();
-            // verifica se non e' piu' compatibile
-            if (! this.euristica.goodSlot(temp_s, temp_d))
+            if (temp_d.cc.id == temp_s.classe.id)
             {
-                to_remove.add(temp_d);
-            }
-            else
-            {
-                if ((!to_add.contains(temp_d)) && temp_d.s == null)
-                    to_add.add(temp_d);
+                // verifica se non e' piu' compatibile
+                if (! this.euristica.goodSlot(temp_s, temp_d))
+                {
+                    to_remove.add(temp_d);
+                }
+                else
+                {
+                    if ((!to_add.contains(temp_d)) && temp_d.s == null)
+                        to_add.add(temp_d);
+                }
             }
         }
 

@@ -39,33 +39,46 @@ public class Heuristic
         while (it.hasNext())
         {
             Dispo dd = (Dispo)it.next();
-            if (dd.s == null && this.goodSlot(ss,dd) && !tried.contains(dd))
+            if (dd.cc == ss.classe)
             {
-                dd.s = ss;
-                ss.assigned.add(dd);
-                ss.n_slot_assigned ++;
-                ss.dominio.remove(dd);
-                return dd;
-            }
-            else
-            {
+                if (dd.s == null && this.goodSlot(ss,dd) && !tried.contains(dd))
+                {
+                    dd.s = ss;
+                    ss.assigned.add(dd);
+                    ss.n_slot_assigned ++;
+                    ss.dominio.remove(dd);
+                    return dd;
+                }
+                else
+                {
+                }
             }
         }
         return null;
     }
 
-    public void generateChild(Node daddy, List<Subject> ss)
+    public Subject generateChild(Node daddy, List<Subject> ss)
     {
+        Subject best = null;
         Iterator it = ss.iterator();
-        while (it.hasNext())
+        if (it.hasNext())
         {
-            Subject temp_s = (Subject) it.next();
-            if (temp_s.n_slot_assigned < temp_s.n_slot)
+            best = (Subject) it.next();
+            while (it.hasNext())
             {
-                Node child = new Node(daddy, temp_s);
-                this.addChild(daddy, child);
+                Subject temp_s = (Subject) it.next();
+                if (temp_s.n_slot_assigned < temp_s.n_slot)
+                {
+                    double temp_val = (double)temp_s.dominio.size()/(double)(temp_s.n_slot - temp_s.n_slot_assigned);
+                    double res_val = (double)best.dominio.size()/(double)(best.n_slot - best.n_slot_assigned);
+                    if (temp_val <= res_val)
+                    {
+                        best = temp_s;
+                    }
+                }
             }
         }
+        return best;
     }
 
     public void addChild(Node daddy, Node child)
@@ -106,28 +119,35 @@ public class Heuristic
     public boolean goodSlot(Subject ss, Dispo dd)
     {
         boolean res = true;
-
-        Iterator it = ss.assigned.iterator();
-        while (it.hasNext())
+        if ( !ss.insegnante.checkConflict(dd) )
         {
-            Dispo temp_d = (Dispo) it.next();
-            // verifica se gli oggetti sono diversi
-            if (temp_d != dd && dd != null && temp_d.key != dd.key)
+            Iterator it = ss.assigned.iterator();
+            while (it.hasNext())
             {
-                //verifica se sono nello stesso giorno
-                if (temp_d.j.getNum() == dd.j.getNum())
+                Dispo temp_d = (Dispo) it.next();
+                // verifica se gli oggetti sono diversi
+                if (temp_d != dd && dd != null && temp_d.key != dd.key)
                 {
-                    //verifica se il corso ammette piu' di due ore consecutive
-                    if ( this.double_hour.valid(ss, dd) )
+                    //verifica se sono nello stesso giorno
+                    if (temp_d.j.getNum() == dd.j.getNum())
                     {
-                        //verifica se le ore sono consecutive
-                        if ( this.cont_hour.valid(temp_d, dd) )
+                        //verifica se il corso ammette piu' di due ore consecutive
+                        if ( this.double_hour.valid(ss, dd) )
                         {
-                            //verifica che non ci siano gia' piu' di due ore in quel giorno
-                            if ( this.day.valid(ss, temp_d.j) < 2 )
+                            //verifica se le ore sono consecutive
+                            if ( this.cont_hour.valid(temp_d, dd) )
                             {
-                                //se non ci sono => OK
-                                res = true ;
+                                //verifica che non ci siano gia' piu' di due ore in quel giorno
+                                if ( this.day.valid(ss, temp_d.j) < 2 )
+                                {
+                                    //se non ci sono => OK
+                                    res = true ;
+                                }
+                                else
+                                {
+                                    res = false;
+                                    break;
+                                }
                             }
                             else
                             {
@@ -143,48 +163,49 @@ public class Heuristic
                     }
                     else
                     {
-                        res = false;
-                        break;
+
+                        //verifica la distribuzione delle ore (eg: non sempre la stessa)
+                        if ( this.not_last.valid(ss, dd) )
+                        {
+                            //TODO: deve diventare un soft constraint => peso
+                            //verifica la distribuzione nei giorni (non giorni consecutivi)
+                            if ( this.spread_day.valid(ss, dd.j)==0 )
+                            {
+                                //verifica che non ci siano gia' piu' di due ore in quel giorno
+                                if (this.day.valid(ss, dd.j) < 2)
+                                {
+                                    res = res && true;
+                                }
+                                else
+                                {
+                                    res = false;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                res = false;
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            res = false;
+                            break;
+                        }
                     }
                 }
                 else
                 {
-                    //verifica la distribuzione delle ore (eg: non sempre la stessa)
-                    if ( this.not_last.valid(ss, dd) )
-                    {
-                        //TODO: deve diventare un soft constraint => peso
-                        //verifica la distribuzione nei giorni (non giorni consecutivi)
-                        if ( this.spread_day.valid(ss, dd.j)==0 )
-                        {
-                            //verifica che non ci siano gia' piu' di due ore in quel giorno
-                            if (this.day.valid(ss, dd.j) < 2)
-                            {
-                                res = res && true;
-                            }
-                            else
-                            {
-                                res = false;
-                                break;
-                            }
-                        }
-                        else
-                        {
-                            res = false;
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        res = false;
-                        break;
-                    }
+                    res = false;
+                    break;
                 }
+            
             }
-            else
-            {
-                res = false;
-                break;
-            }
+        }
+        else
+        {
+            res = false;
         }
         return res;
     }
@@ -194,29 +215,42 @@ public class Heuristic
         // verifica se gli oggetti sono diversi
         if (d1 != d2 && d1 != null && d1.key != d2.key)
         {
-            /**
-            * STESSO GIORNO
-            */
-            //verifica se sono nello stesso giorno
-            if (d1.j.getNum() == d2.j.getNum())
-            {//verifica se il corso ammette piu' di due ore consecutive
-                if ( this.double_hour.valid(d1.s, d1) )
-                {
-                    if ( this.cont_hour.valid(d1, d2) )
+            if (d1.cc.id == d2.cc.id)
+            {
+                /**
+                * STESSO GIORNO
+                */
+                //verifica se sono nello stesso giorno
+                if (d1.j.getNum() == d2.j.getNum())
+                {//verifica se il corso ammette piu' di due ore consecutive
+                    if ( this.double_hour.valid(d1.s, d1) )
                     {
-                        return true;
+                        if ( this.cont_hour.valid(d1, d2) )
+                        {
+                            return true;
+                        }
+                    }
+                }
+                /**
+                 * GIORNI ADIACENTI AD ORE DIVERSE
+                 */
+                else
+                {
+                    //verifica la distribuzione delle ore (eg: non sempre la stessa)
+                    if ( this.not_last.valid(d1.s, d2) )
+                    {
+                        if ( this.spread_day.valid(d1.s, d2.j)==0 )
+                        {
+                            return true;
+                        }
                     }
                 }
             }
-            /**
-             * GIORNI ADIACENTI AD ORE DIVERSE
-             */
             else
             {
-                //verifica la distribuzione delle ore (eg: non sempre la stessa)
-                if ( this.not_last.valid(d1.s, d2) )
+                if (d1.s.insegnante.id == d2.s.insegnante.id)
                 {
-                    if ( this.spread_day.valid(d1.s, d2.j)==0 )
+                    if (d1.j.getNum() == d2.j.getNum() && d1.h == d1.h)
                     {
                         return true;
                     }
