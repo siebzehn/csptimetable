@@ -154,12 +154,9 @@ public class Solver
         Dispo template = new Dispo(new Day(7), new FlexiTime(0,1,0), 0, new LeisureClass(-1,-1,' ',-1));
         Dispo dd = template;
         Date start_d = new Date();
+
         long start = System.currentTimeMillis();
-        while (dd != null)
-        {
-            dd = dfs.dfsVist(root, available_slot, courses, ssss, "", template, scuola );
-            Collections.shuffle(this.available_slot);
-        }
+        dd = dfs.dfsVist(root, available_slot, courses, "", template, scuola );
         long end = System.currentTimeMillis();
 
         System.out.println("\n Result: ["+ dd +"] produced in [" + (((double)(end-start))/1000) + "]");

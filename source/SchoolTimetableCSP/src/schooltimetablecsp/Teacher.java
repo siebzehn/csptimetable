@@ -95,8 +95,11 @@ public class Teacher {
                 }
                 else
                 {
-                    for (int t = 0; t < len; t++)
-                        empty += " ";
+                    if (empty.length() < 1)
+                    {
+                        for (int t = 0; t <= len; t++)
+                            empty += " ";
+                    }
                     System.out.print("[" + empty + "]    \t");
                 }
             }
