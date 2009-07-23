@@ -33,7 +33,7 @@ public class DeepSearch
 
     public Dispo dfsVist(Node root, List<Dispo> available_slot, List<Subject> to_assign, String preprint, Dispo last_assigned, List<LeisureClass> scuola)
     {
-        System.out.println("Slots: " + available_slot.size() + " Corsi: " + to_assign.size() + " Dominio: " + ((Subject)root.value()).dominio.size() );
+        //System.out.println("Slots: " + available_slot.size() + " Corsi: " + to_assign.size() + " Dominio: " + ((Subject)root.value()).dominio.size() );
         Dispo result = last_assigned;
         boolean removed = false;
         if (root != null)

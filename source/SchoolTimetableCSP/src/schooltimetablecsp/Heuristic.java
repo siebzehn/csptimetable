@@ -21,15 +21,16 @@ public class Heuristic
     LastHourConstraint not_last;
     DoubleHourConstraint double_hour;
     ConsecutiveHourConstraint cont_hour;
+    AdjoiningTeacherConstraint happy_teacher;
 
     public Heuristic(double sc, double lhc)
     {
-        this.spread_day = new SpreadConstraint(sc);
-        this.day        = new DayConstraint();
-        this.not_last   = new LastHourConstraint(lhc);
-        this.double_hour= new DoubleHourConstraint();
-        this.cont_hour  = new ConsecutiveHourConstraint();
-        
+        this.spread_day    = new SpreadConstraint(sc);
+        this.day           = new DayConstraint();
+        this.not_last      = new LastHourConstraint(lhc);
+        this.double_hour   = new DoubleHourConstraint();
+        this.cont_hour     = new ConsecutiveHourConstraint();
+        this.happy_teacher = new AdjoiningTeacherConstraint(0.3);
     }
     
     public Dispo assignSlot(Subject ss, List<Dispo> tried)
@@ -174,7 +175,15 @@ public class Heuristic
                                 //verifica che non ci siano gia' piu' di due ore in quel giorno
                                 if (this.day.valid(ss, dd.j) < 2)
                                 {
-                                    res = res && true;
+                                    if (this.happy_teacher.valid( ss, dd) ) //.j) == 0 )
+                                    {
+                                        res = res && true;
+                                    }
+                                    else
+                                    {
+                                        res = false;
+                                        break;
+                                    }
                                 }
                                 else
                                 {
