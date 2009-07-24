@@ -142,7 +142,7 @@ public class Heuristic
                                 if ( this.day.valid(ss, temp_d.j) < 2 )
                                 {
                                     //se non ci sono => OK
-                                    res = true ;
+                                    res = res && true ;
                                 }
                                 else
                                 {
@@ -175,15 +175,15 @@ public class Heuristic
                                 //verifica che non ci siano gia' piu' di due ore in quel giorno
                                 if (this.day.valid(ss, dd.j) < 2)
                                 {
-                                    if (this.happy_teacher.valid( ss, dd) ) //.j) == 0 )
-                                    {
+                                    /*if (this.happy_teacher.valid( ss, dd) ) //.j) == 0 )
+                                    {*/
                                         res = res && true;
-                                    }
+                                    /*}
                                     else
                                     {
                                         res = false;
                                         break;
-                                    }
+                                    }*/
                                 }
                                 else
                                 {

@@ -10,8 +10,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.LinkedList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 /**
  *
  * @author five_stars
@@ -30,6 +28,36 @@ public class Solver
     Teacher t7 = new Teacher(7, "g", new Day(5)); // religione
     Teacher t8 = new Teacher(8, "h", new Day(1)); // educazione fisica
     Teacher t9 = new Teacher(9, "i", new Day(6)); // informatica
+
+    Teacher t11 = new Teacher(1, "a", new Day(1)); // letteratura
+    Teacher t21 = new Teacher(2, "b", new Day(2)); // matematica
+    Teacher t31 = new Teacher(3, "c", new Day(3)); // filosofia - storia
+    Teacher t41 = new Teacher(4, "d", new Day(6)); // chimica - fisica
+    Teacher t51 = new Teacher(5, "e", new Day(3)); // inglese
+    Teacher t61 = new Teacher(6, "f", new Day(4)); // biologia - scienze
+    Teacher t71 = new Teacher(7, "g", new Day(5)); // religione
+    Teacher t81 = new Teacher(8, "h", new Day(1)); // educazione fisica
+    Teacher t91 = new Teacher(9, "i", new Day(6)); // informatica
+
+    Teacher t12 = new Teacher(1, "a", new Day(1)); // letteratura
+    Teacher t22 = new Teacher(2, "b", new Day(2)); // matematica
+    Teacher t32 = new Teacher(3, "c", new Day(3)); // filosofia - storia
+    Teacher t42 = new Teacher(4, "d", new Day(6)); // chimica - fisica
+    Teacher t52 = new Teacher(5, "e", new Day(3)); // inglese
+    Teacher t62 = new Teacher(6, "f", new Day(4)); // biologia - scienze
+    Teacher t72 = new Teacher(7, "g", new Day(5)); // religione
+    Teacher t82 = new Teacher(8, "h", new Day(1)); // educazione fisica
+    Teacher t92 = new Teacher(9, "i", new Day(6)); // informatica
+
+    Teacher t13 = new Teacher(1, "a", new Day(1)); // letteratura
+    Teacher t23 = new Teacher(2, "b", new Day(2)); // matematica
+    Teacher t33 = new Teacher(3, "c", new Day(3)); // filosofia - storia
+    Teacher t43 = new Teacher(4, "d", new Day(6)); // chimica - fisica
+    Teacher t53 = new Teacher(5, "e", new Day(3)); // inglese
+    Teacher t63 = new Teacher(6, "f", new Day(4)); // biologia - scienze
+    Teacher t73 = new Teacher(7, "g", new Day(5)); // religione
+    Teacher t83 = new Teacher(8, "h", new Day(1)); // educazione fisica
+    Teacher t93 = new Teacher(9, "i", new Day(6)); // informatica
 
     public Solver()
     {
@@ -74,25 +102,25 @@ public class Solver
         scuola.add(prima_a);
         scuola.add(seconda_a);
         scuola.add(terza_a);
-        scuola.add(quarta_a);
+//        scuola.add(quarta_a);
 /*        scuola.add(quinta_a);
 */
-/*        scuola.add(prima_b);
+        scuola.add(prima_b);
         scuola.add(seconda_b);
         scuola.add(terza_b);
-        scuola.add(quarta_b);
-        scuola.add(quinta_b);
+//        scuola.add(quarta_b);
+/*        scuola.add(quinta_b);
 */
-/*        scuola.add(prima_c);
+        scuola.add(prima_c);
         scuola.add(seconda_c);
-        scuola.add(terza_c);
-        scuola.add(quarta_c);
+ //       scuola.add(terza_c);
+/*        scuola.add(quarta_c);
         scuola.add(quinta_c);
 */
-       /* scuola.add(prima_d);
+        scuola.add(prima_d);
         scuola.add(seconda_d);
-        scuola.add(terza_d);
-        scuola.add(quarta_d);
+   //     scuola.add(terza_d);
+       /* scuola.add(quarta_d);
         scuola.add(quinta_d);
 */
         Iterator it = scuola.iterator();
@@ -128,7 +156,33 @@ public class Solver
         while(it.hasNext())
         {
             LeisureClass temp = (LeisureClass) it.next();
-            this.addCorsi(temp);
+            if (temp.section == 'A')
+            {
+                System.out.println(temp.section);
+                this.addCorsi(temp);
+            }
+            else
+            {
+                if (temp.section == 'B')
+                {
+                    System.out.println(temp.section);
+                    this.addCorsi2(temp);
+                }
+                else
+                {
+                    if (temp.section == 'C')
+                    {
+                        System.out.println(temp.section);
+                        this.addCorsi3(temp);
+                    }
+                    else
+                    {
+                        System.out.println(temp.section);
+                        this.addCorsi4(temp);
+                    }
+                }
+            }
+
             courses.addAll(temp.modules);
 
             int count = 1;
@@ -173,6 +227,36 @@ public class Solver
         t7.printTimeTable(to_print);
         t8.printTimeTable(to_print);
         t9.printTimeTable(to_print);
+
+        t11.printTimeTable(to_print);
+        t21.printTimeTable(to_print);
+        t31.printTimeTable(to_print);
+        t41.printTimeTable(to_print);
+        t51.printTimeTable(to_print);
+        t61.printTimeTable(to_print);
+        t71.printTimeTable(to_print);
+        t81.printTimeTable(to_print);
+        t91.printTimeTable(to_print);
+
+        t12.printTimeTable(to_print);
+        t22.printTimeTable(to_print);
+        t32.printTimeTable(to_print);
+        t42.printTimeTable(to_print);
+        t52.printTimeTable(to_print);
+        t62.printTimeTable(to_print);
+        t72.printTimeTable(to_print);
+        t82.printTimeTable(to_print);
+        t92.printTimeTable(to_print);
+
+        t13.printTimeTable(to_print);
+        t23.printTimeTable(to_print);
+        t33.printTimeTable(to_print);
+        t43.printTimeTable(to_print);
+        t53.printTimeTable(to_print);
+        t63.printTimeTable(to_print);
+        t73.printTimeTable(to_print);
+        t83.printTimeTable(to_print);
+        t93.printTimeTable(to_print);
     }
 
     public void fillDomain(List<Subject> ss)
@@ -195,16 +279,116 @@ public class Solver
     {
         classe.modules.add(createSubj(1+(12*classe.id), "Letteratura",4, true, t1, classe));
         classe.modules.add(createSubj(2+(12*classe.id), "Religione",1, false, t7, classe));
-        classe.modules.add(createSubj(3+(12*classe.id), "Chimica",2, true, t4, classe));
-        classe.modules.add(createSubj(4+(12*classe.id), "Filosofia",2, false, t3, classe));
-        classe.modules.add(createSubj(5+(12*classe.id), "Storia",2, false, t3, classe));
+        classe.modules.add(createSubj(3+(12*classe.id), "Chimica",2, true, t41, classe));
+        classe.modules.add(createSubj(4+(12*classe.id), "Filosofia",2, false, t31, classe));
+        classe.modules.add(createSubj(5+(12*classe.id), "Storia",2, false, t31, classe));
         classe.modules.add(createSubj(6+(12*classe.id), "Inglese",3, false, t5, classe));
         classe.modules.add(createSubj(7+(12*classe.id), "Matematica",4, true, t2, classe));
         classe.modules.add(createSubj(8+(12*classe.id), "Informatica",3, true, t9, classe));
-        classe.modules.add(createSubj(9+(12*classe.id), "Fisica",3, true, t4, classe));
+        classe.modules.add(createSubj(9+(12*classe.id), "Fisica",3, true, t41, classe));
         classe.modules.add(createSubj(10+(12*classe.id), "Biologia",2, false, t6, classe));
         classe.modules.add(createSubj(11+(12*classe.id), "Scienze della Terra",2, false, t6, classe));
+        classe.modules.add(createSubj(12+(12*classe.id), "Educazione Fisica",2, true, t81, classe));
+
+      /*  classe.modules.add(createSubj(1+(12*classe.id), "Letteratura",4, true, t11, classe));
+        classe.modules.add(createSubj(2+(12*classe.id), "Religione",1, false, t71, classe));
+        classe.modules.add(createSubj(3+(12*classe.id), "Chimica",2, true, t4, classe));
+        classe.modules.add(createSubj(4+(12*classe.id), "Filosofia",2, false, t3, classe));
+        classe.modules.add(createSubj(5+(12*classe.id), "Storia",2, false, t3, classe));
+        classe.modules.add(createSubj(6+(12*classe.id), "Inglese",3, false, t51, classe));
+        classe.modules.add(createSubj(7+(12*classe.id), "Matematica",4, true, t21, classe));
+        classe.modules.add(createSubj(8+(12*classe.id), "Informatica",3, true, t91, classe));
+        classe.modules.add(createSubj(9+(12*classe.id), "Fisica",3, true, t4, classe));
+        classe.modules.add(createSubj(10+(12*classe.id), "Biologia",2, false, t61, classe));
+        classe.modules.add(createSubj(11+(12*classe.id), "Scienze della Terra",2, false, t61, classe));
         classe.modules.add(createSubj(12+(12*classe.id), "Educazione Fisica",2, true, t8, classe));
+    */}
+
+    public void addCorsi2(LeisureClass classe)
+    {
+    /*    classe.modules.add(createSubj(1+(12*classe.id), "Letteratura",4, true, t1, classe));
+        classe.modules.add(createSubj(2+(12*classe.id), "Religione",1, false, t7, classe));
+        classe.modules.add(createSubj(3+(12*classe.id), "Chimica",2, true, t41, classe));
+        classe.modules.add(createSubj(4+(12*classe.id), "Filosofia",2, false, t31, classe));
+        classe.modules.add(createSubj(5+(12*classe.id), "Storia",2, false, t31, classe));
+        classe.modules.add(createSubj(6+(12*classe.id), "Inglese",3, false, t5, classe));
+        classe.modules.add(createSubj(7+(12*classe.id), "Matematica",4, true, t2, classe));
+        classe.modules.add(createSubj(8+(12*classe.id), "Informatica",3, true, t9, classe));
+        classe.modules.add(createSubj(9+(12*classe.id), "Fisica",3, true, t41, classe));
+        classe.modules.add(createSubj(10+(12*classe.id), "Biologia",2, false, t6, classe));
+        classe.modules.add(createSubj(11+(12*classe.id), "Scienze della Terra",2, false, t6, classe));
+        classe.modules.add(createSubj(12+(12*classe.id), "Educazione Fisica",2, true, t81, classe));
+*/
+        classe.modules.add(createSubj(1+(12*classe.id), "Letteratura",4, true, t11, classe));
+        classe.modules.add(createSubj(2+(12*classe.id), "Religione",1, false, t71, classe));
+        classe.modules.add(createSubj(3+(12*classe.id), "Chimica",2, true, t4, classe));
+        classe.modules.add(createSubj(4+(12*classe.id), "Filosofia",2, false, t3, classe));
+        classe.modules.add(createSubj(5+(12*classe.id), "Storia",2, false, t3, classe));
+        classe.modules.add(createSubj(6+(12*classe.id), "Inglese",3, false, t51, classe));
+        classe.modules.add(createSubj(7+(12*classe.id), "Matematica",4, true, t21, classe));
+        classe.modules.add(createSubj(8+(12*classe.id), "Informatica",3, true, t91, classe));
+        classe.modules.add(createSubj(9+(12*classe.id), "Fisica",3, true, t4, classe));
+        classe.modules.add(createSubj(10+(12*classe.id), "Biologia",2, false, t61, classe));
+        classe.modules.add(createSubj(11+(12*classe.id), "Scienze della Terra",2, false, t61, classe));
+        classe.modules.add(createSubj(12+(12*classe.id), "Educazione Fisica",2, true, t8, classe));
+    }
+
+    public void addCorsi3(LeisureClass classe)
+    {
+        classe.modules.add(createSubj(1+(12*classe.id), "Letteratura",4, true, t12, classe));
+        classe.modules.add(createSubj(2+(12*classe.id), "Religione",1, false, t72, classe));
+        classe.modules.add(createSubj(3+(12*classe.id), "Chimica",2, true, t43, classe));
+        classe.modules.add(createSubj(4+(12*classe.id), "Filosofia",2, false, t33, classe));
+        classe.modules.add(createSubj(5+(12*classe.id), "Storia",2, false, t33, classe));
+        classe.modules.add(createSubj(6+(12*classe.id), "Inglese",3, false, t52, classe));
+        classe.modules.add(createSubj(7+(12*classe.id), "Matematica",4, true, t22, classe));
+        classe.modules.add(createSubj(8+(12*classe.id), "Informatica",3, true, t92, classe));
+        classe.modules.add(createSubj(9+(12*classe.id), "Fisica",3, true, t42, classe));
+        classe.modules.add(createSubj(10+(12*classe.id), "Biologia",2, false, t62, classe));
+        classe.modules.add(createSubj(11+(12*classe.id), "Scienze della Terra",2, false, t62, classe));
+        classe.modules.add(createSubj(12+(12*classe.id), "Educazione Fisica",2, true, t83, classe));
+/*
+        classe.modules.add(createSubj(1+(12*classe.id), "Letteratura",4, true, t11, classe));
+        classe.modules.add(createSubj(2+(12*classe.id), "Religione",1, false, t71, classe));
+        classe.modules.add(createSubj(3+(12*classe.id), "Chimica",2, true, t4, classe));
+        classe.modules.add(createSubj(4+(12*classe.id), "Filosofia",2, false, t3, classe));
+        classe.modules.add(createSubj(5+(12*classe.id), "Storia",2, false, t3, classe));
+        classe.modules.add(createSubj(6+(12*classe.id), "Inglese",3, false, t51, classe));
+        classe.modules.add(createSubj(7+(12*classe.id), "Matematica",4, true, t21, classe));
+        classe.modules.add(createSubj(8+(12*classe.id), "Informatica",3, true, t91, classe));
+        classe.modules.add(createSubj(9+(12*classe.id), "Fisica",3, true, t4, classe));
+        classe.modules.add(createSubj(10+(12*classe.id), "Biologia",2, false, t61, classe));
+        classe.modules.add(createSubj(11+(12*classe.id), "Scienze della Terra",2, false, t61, classe));
+        classe.modules.add(createSubj(12+(12*classe.id), "Educazione Fisica",2, true, t8, classe));
+ */   }
+    
+    public void addCorsi4(LeisureClass classe)
+    {
+    /*    classe.modules.add(createSubj(1+(12*classe.id), "Letteratura",4, true, t1, classe));
+        classe.modules.add(createSubj(2+(12*classe.id), "Religione",1, false, t7, classe));
+        classe.modules.add(createSubj(3+(12*classe.id), "Chimica",2, true, t41, classe));
+        classe.modules.add(createSubj(4+(12*classe.id), "Filosofia",2, false, t31, classe));
+        classe.modules.add(createSubj(5+(12*classe.id), "Storia",2, false, t31, classe));
+        classe.modules.add(createSubj(6+(12*classe.id), "Inglese",3, false, t5, classe));
+        classe.modules.add(createSubj(7+(12*classe.id), "Matematica",4, true, t2, classe));
+        classe.modules.add(createSubj(8+(12*classe.id), "Informatica",3, true, t9, classe));
+        classe.modules.add(createSubj(9+(12*classe.id), "Fisica",3, true, t41, classe));
+        classe.modules.add(createSubj(10+(12*classe.id), "Biologia",2, false, t6, classe));
+        classe.modules.add(createSubj(11+(12*classe.id), "Scienze della Terra",2, false, t6, classe));
+        classe.modules.add(createSubj(12+(12*classe.id), "Educazione Fisica",2, true, t81, classe));
+*/
+        classe.modules.add(createSubj(1+(12*classe.id), "Letteratura",4, true, t13, classe));
+        classe.modules.add(createSubj(2+(12*classe.id), "Religione",1, false, t73, classe));
+        classe.modules.add(createSubj(3+(12*classe.id), "Chimica",2, true, t42, classe));
+        classe.modules.add(createSubj(4+(12*classe.id), "Filosofia",2, false, t32, classe));
+        classe.modules.add(createSubj(5+(12*classe.id), "Storia",2, false, t32, classe));
+        classe.modules.add(createSubj(6+(12*classe.id), "Inglese",3, false, t53, classe));
+        classe.modules.add(createSubj(7+(12*classe.id), "Matematica",4, true, t23, classe));
+        classe.modules.add(createSubj(8+(12*classe.id), "Informatica",3, true, t93, classe));
+        classe.modules.add(createSubj(9+(12*classe.id), "Fisica",3, true, t42, classe));
+        classe.modules.add(createSubj(10+(12*classe.id), "Biologia",2, false, t63, classe));
+        classe.modules.add(createSubj(11+(12*classe.id), "Scienze della Terra",2, false, t63, classe));
+        classe.modules.add(createSubj(12+(12*classe.id), "Educazione Fisica",2, true, t82, classe));
     }
 
 }
