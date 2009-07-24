@@ -39,7 +39,7 @@ public class DeepSearch
         if (root != null)
         {
             Subject process_ss = (Subject)root.value();
-            System.out.println(preprint + process_ss + " [" + process_ss.classe + "]");
+            //System.out.println(preprint + process_ss + " [" + process_ss.classe + "]");
 
             List<Dispo> tried_dd = new LinkedList<Dispo>();
             // itero tutti valori del dominio
@@ -59,7 +59,7 @@ public class DeepSearch
                     process_ss.insegnante.teach_time.add(temp_ds);
                     this.timetable[process_ss.classe.id-1][temp_ds.j.numDay-1][temp_ds.h.h-1] = process_ss.name;
                     this.backjumping.add(0,temp_ds);
-                    System.out.println(preprint + "***" + temp_ds + " [" + temp_ds.cc + "]*** ");
+                    //System.out.println(preprint + "***" + temp_ds + " [" + temp_ds.cc + "]*** ");
                     // remove the assigned Dispo from all the subject
                     constr_prop.updateDomain(to_assign, temp_ds, true);
                     // update all in-conflict Dispo from the assigned subject domain
@@ -148,14 +148,14 @@ public class DeepSearch
                     }
                     System.out.println();
 */
-                    if (result != null)
-                       System.out.println(preprint + result + " " + result.cc);
+  //                  if (result != null)
+    //                   System.out.println(preprint + result + " " + result.cc);
                     return result;
                 }
             }
         }
-       if (result != null)
-            System.out.println(preprint + result + " " + result.cc);
+      // if (result != null)
+        //    System.out.println(preprint + result + " " + result.cc);
         return result;
     }
 
