@@ -7,7 +7,6 @@ package schooltimetablecsp;
 
 import java.util.List;
 import java.util.Iterator;
-import java.util.Collection;
 
 /**
  *
@@ -42,8 +41,10 @@ public class Heuristic
             Dispo dd = (Dispo)it.next();
             if (dd.cc == ss.classe)
             {
-                if (dd.s == null && this.goodSlot(ss,dd) && !tried.contains(dd))
+                double costa = this.goodSlot(ss,dd);
+                if (dd.s == null && costa >= 0 && !tried.contains(dd))
                 {
+                    dd.added_cost = costa;
                     dd.s = ss;
                     ss.assigned.add(dd);
                     ss.n_slot_assigned ++;
@@ -61,65 +62,37 @@ public class Heuristic
     public Subject generateChild(Node daddy, List<Subject> ss)
     {
         Subject best = null;
+        Teacher best_t = null;
         Iterator it = ss.iterator();
         if (it.hasNext())
         {
             best = (Subject) it.next();
+            best_t = (Teacher) best.insegnante;
             while (it.hasNext())
             {
                 Subject temp_s = (Subject) it.next();
-                if (temp_s.n_slot_assigned < temp_s.n_slot)
+
+                if ( (best_t.size_domain() >= temp_s.insegnante.size_domain()) && (temp_s.n_slot_assigned < temp_s.n_slot))
                 {
-                    double temp_val = (double)temp_s.dominio.size()/(double)(temp_s.n_slot - temp_s.n_slot_assigned);
-                    double res_val = (double)best.dominio.size()/(double)(best.n_slot - best.n_slot_assigned);
+                    double temp_val = (double)(temp_s.n_slot - temp_s.n_slot_assigned)/(double)temp_s.dominio.size();
+                    double res_val = (double)(best.n_slot - best.n_slot_assigned)/(double)best.dominio.size();
+                 //   System.out.print(temp_s + "["+temp_val+"] ");
                     if (temp_val <= res_val)
                     {
                         best = temp_s;
+                        best_t = temp_s.insegnante;
                     }
                 }
             }
         }
+        //System.out.println();
         return best;
     }
 
-    public void addChild(Node daddy, Node child)
+    public double goodSlot(Subject ss, Dispo dd)
     {
-        boolean added = false;
-        if (daddy.hasChildren())
-        {
-            Collection<Node> daddy_child = daddy.figli();
-            Subject child_ss = (Subject)child.value();
-            Iterator it = daddy_child.iterator();
-            while (it.hasNext())
-            {
-                Node temp_n = (Node) it.next();
-                Subject temp_s = (Subject)temp_n.value();
-                //// numero possibili assegnazioni / numero ore da assegnare
-                double temp_val = (double)temp_s.dominio.size()/(double)(temp_s.n_slot - temp_s.n_slot_assigned);
-                //// numero possibili assegnazioni / numero ore da assegnare
-                double res_val = (double)child_ss.dominio.size()/(double)(child_ss.n_slot - child_ss.n_slot_assigned);
-                //System.out.print(" (" +child_ss.dominio.size()+")/("+child_ss.n_slot+"-"+child_ss.n_slot_assigned+")="+res_val);
-                //System.out.print(" (" +temp_s.dominio.size()+")/("+temp_s.n_slot+"-"+temp_s.n_slot_assigned+")="+temp_val);
-                //System.out.println();
-                if (temp_val <= res_val)
-                {
-                    //System.out.println(" - >  assign " + (child_ss) + " after " + temp_s);
-                    daddy.insertChildren(child, daddy.getChildIndex(temp_n) ); //addChildren(child);
-                    added = true;
-                    break;
-                }
-            }
-        }
-        if (!added)
-        {
-            //System.out.println(" - >  assign " + ((Subject)child.value()) + " at the end");
-            daddy.addChildren(child);
-        }
-    }
-
-    public boolean goodSlot(Subject ss, Dispo dd)
-    {
-        boolean res = true;
+        //boolean res = true;
+        double res = 0;
         if ( !ss.insegnante.checkConflict(dd) )
         {
             Iterator it = ss.assigned.iterator();
@@ -142,23 +115,23 @@ public class Heuristic
                                 if ( this.day.valid(ss, temp_d.j) < 2 )
                                 {
                                     //se non ci sono => OK
-                                    res = res && true ;
+                                    res = this.not_last.valid(ss, dd, "") + this.spread_day.valid(ss, dd.j, ""); //this.spread_day.valid(ss, dd.j, "") +res && true ;
                                 }
                                 else
                                 {
-                                    res = false;
+                                    res = -1;//false;
                                     break;
                                 }
                             }
                             else
                             {
-                                res = false;
+                                res = -1;//false;
                                 break;
                             }
                         }
                         else
                         {
-                            res = false;
+                            res = -1;//false;
                             break;
                         }
                     }
@@ -166,18 +139,18 @@ public class Heuristic
                     {
 
                         //verifica la distribuzione delle ore (eg: non sempre la stessa)
-                        if ( this.not_last.valid(ss, dd) )
-                        {
+                        /*if ( this.not_last.valid(ss, dd) )
+                        {*/
                             //TODO: deve diventare un soft constraint => peso
                             //verifica la distribuzione nei giorni (non giorni consecutivi)
-                            if ( this.spread_day.valid(ss, dd.j)==0 )
-                            {
+                            /*if ( this.spread_day.valid(ss, dd.j)==0 )
+                            {*/
                                 //verifica che non ci siano gia' piu' di due ore in quel giorno
                                 if (this.day.valid(ss, dd.j) < 2)
                                 {
                                     /*if (this.happy_teacher.valid( ss, dd) ) //.j) == 0 )
                                     {*/
-                                        res = res && true;
+                                        res = this.not_last.valid(ss, dd, "") + this.spread_day.valid(ss, dd.j, ""); //res = res && true;
                                     /*}
                                     else
                                     {
@@ -187,26 +160,26 @@ public class Heuristic
                                 }
                                 else
                                 {
-                                    res = false;
+                                    res = -1;//false;
                                     break;
                                 }
-                            }
+                            /*}
                             else
                             {
-                                res = false;
+                                res = -1;//false;
                                 break;
-                            }
-                        }
+                            }*/
+                        /*}
                         else
                         {
-                            res = false;
+                            res = -1;//false;
                             break;
-                        }
+                        }*/
                     }
                 }
                 else
                 {
-                    res = false;
+                    res = -1;//false;
                     break;
                 }
             
@@ -214,7 +187,7 @@ public class Heuristic
         }
         else
         {
-            res = false;
+            res = -1;//false;
         }
         return res;
     }
@@ -300,6 +273,61 @@ public class Heuristic
                                 res = temp;*/
                 }
 
+        }
+        return res;
+    }
+
+
+    static public Subject chooseFirstByTeacher(List<Teacher> prof)
+    {
+        Subject res = null;
+        Iterator it_prof = prof.iterator();
+
+        int pre_domain = -1;
+        //double pre_prof = -1;
+        while(it_prof.hasNext())
+        {
+            Teacher temp_t = (Teacher) it_prof.next();
+            int tot_hour = temp_t.tot_hour();
+            int tot_domain = temp_t.size_domain();
+            //double res_prof = ((double)tot_hour)/((double)tot_domain);
+
+            if ( tot_domain > pre_domain ) //res_prof > pre_prof )
+            {
+                pre_domain = tot_domain;
+                //pre_prof = res_prof;
+
+                Iterator it = temp_t.modules.iterator();
+                Subject temp_res = null;
+                while (it.hasNext())
+                {
+                    Subject temp_s = (Subject) it.next();
+                    if (temp_res != null)
+                    {
+                        //scelgo quello con il dominio piu' piccolo
+                        if (temp_s.dominio.size() < temp_res.dominio.size())
+                            temp_res = temp_s;
+                        else
+                            //se sono uguali => scelgo quello con piu' ore
+                            if (temp_s.dominio.size() == temp_res.dominio.size())
+                            {
+                                double temp_val = ((double)temp_s.dominio.size())/((double)temp_s.n_slot);
+                                double temp_res_val = ((double)temp_res.dominio.size())/((double)temp_res.n_slot);
+                                if (temp_val < temp_res_val)
+                                {
+                                    temp_res = temp_s;
+                                }
+                            }
+                    }
+                    else
+                    {
+                        temp_res = temp_s;
+                    }
+
+                }
+                if (temp_res!= null)
+                   res = temp_res;
+            }
         }
         return res;
     }

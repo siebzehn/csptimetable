@@ -43,10 +43,45 @@ public class SpreadConstraint extends Constraint
         if (counter > 0)
             val = counter/((double)ss.assigned.size());
 
+        //System.out.print(val + " ");
         if (val > this.level)
             return -1;
         else
             return 0;
+    }
+
+
+    public double valid(Subject ss, Day day, String cc)
+    {
+        double val_res = 0;
+        double counter = 0;
+        Iterator it = ss.assigned.iterator();
+        while(it.hasNext())
+        {
+            Dispo temp_d = (Dispo) it.next();
+            if (temp_d.j.numDay == (day.numDay+1))
+            {
+                counter += 1;
+            }
+            else if (temp_d.j.numDay == (day.numDay-1))
+            {
+                counter += 1;
+            }
+            else if(temp_d.j.numDay == day.numDay)
+            {
+                counter += 1;
+            }
+        }
+        double val = 0;
+        if (counter > 0)
+            val = counter/((double)ss.assigned.size());
+        val_res = counter/((double)ss.assigned.size());
+       /* System.out.print(val + " ");
+        if (val > this.level)
+            return -1;
+        else
+            return 0;*/
+        return val_res;
     }
 
     @Override

@@ -3,19 +3,19 @@
  * and open the template in the editor.
  */
 
-package schooltimetablecsp;
+//package schooltimetablecsp;
 
 /**
  *
  * @author five_stars
  */
-public class Main {
+//public class Main {
 
     
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args)
+  /*  public static void main(String[] args)
     {
         Solver sol = new Solver();
         sol.start();
@@ -23,3 +23,4 @@ public class Main {
     }
 
 }
+*/

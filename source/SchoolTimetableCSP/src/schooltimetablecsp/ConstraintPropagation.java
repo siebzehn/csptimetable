@@ -55,7 +55,7 @@ public class ConstraintPropagation
             if (temp_d.cc.id == temp_s.classe.id)
             {
                 // verifica se non e' piu' compatibile
-                if (! this.euristica.goodSlot(temp_s, temp_d))
+                if ( this.euristica.goodSlot(temp_s, temp_d) == -1)//! this.euristica.goodSlot(temp_s, temp_d) )
                 {
                     to_remove.add(temp_d);
                 }

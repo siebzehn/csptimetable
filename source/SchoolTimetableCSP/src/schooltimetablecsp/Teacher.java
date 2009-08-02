@@ -33,6 +33,7 @@ public class Teacher {
 
     public boolean checkConflict(Dispo dd)
     {
+        //System.out.println(dd.j + " - " + this.free_day);
         if (dd.j.numDay != this.free_day.numDay)
         {
             Iterator<Dispo> it = this.teach_time.iterator();
@@ -53,6 +54,30 @@ public class Teacher {
             return true;
         }
         return false;
+    }
+
+    public int tot_hour()
+    {
+        int res = 0;
+        Iterator it = this.modules.iterator();
+        while (it.hasNext())
+        {
+            Subject temp_s = (Subject) it.next();
+            res += temp_s.n_slot;
+        }
+        return res;
+    }
+
+    public int size_domain()
+    {
+        int res = 0;
+        Iterator it = this.modules.iterator();
+        while (it.hasNext())
+        {
+            Subject temp_s = (Subject) it.next();
+            res += temp_s.dominio.size();
+        }
+        return res;
     }
 
     public void printTimeTable(List<Dispo> ddl)
@@ -107,4 +132,9 @@ public class Teacher {
         }
         System.out.println("*********");
     }
+
+    public String toString()
+    {
+		return(this.name);
+	}
 }
