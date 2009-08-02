@@ -5,6 +5,7 @@
 
 package schooltimetablecsp;
 
+import java.awt.Color;
 import java.util.List;
 import java.util.LinkedList;
 /**
@@ -24,6 +25,7 @@ public class Subject
     public LeisureClass classe;
     int level_hard = -1;
     int level_soft = -1;
+    public Color colore = Color.WHITE;
 
     public Subject (int i, String n, int s, boolean c)
     {
@@ -42,9 +44,27 @@ public class Subject
         this.n_slot     = s;
         this.couple     = c;
         this.insegnante = t;
+        t.modules.add(this);
+        lc.modules.add(this);
         this.classe     = lc;
         this.dominio = new LinkedList<Dispo>();
         this.assigned = new LinkedList<Dispo>();
+    }
+
+    public Subject (int i, String n, int s, boolean c, Teacher t, LeisureClass lc, Color cc)
+    {
+        this.id         = i;
+        this.name       = n;
+        this.n_slot     = s;
+        this.couple     = c;
+        this.insegnante = t;
+        t.modules.add(this);
+        lc.modules.add(this);
+        this.classe     = lc;
+        this.dominio = new LinkedList<Dispo>();
+        this.assigned = new LinkedList<Dispo>();
+
+        this.colore = cc;
     }
 
     public int compareTo(Object o)

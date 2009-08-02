@@ -14,32 +14,52 @@ import java.util.LinkedList;
  */
 public class DeepSearch
 {
+    public static boolean condition_running = true;
+    public static boolean debug_print_console = false;
+    public static boolean ended = false;
+    public static int slot_remainig;
+    public static int subject_remaining;
+    
     Dispo template;
     String timetable[][][];
     private List<Dispo> backjumping;
     Heuristic euristica;
     ConstraintPropagation constr_prop;
     ForwardChecking forward;
+    double sol_cost;
 
     public DeepSearch(double sc, double lhc, int classi)
     {
+        this.slot_remainig = 0;
         this.template = new Dispo(new Day(7), new FlexiTime(0,1,0), 0, new LeisureClass(-1,-1,' ',-1));
-        this.timetable = new String[classi][6][5];
+        this.timetable = new String[classi][6][8];
         this.backjumping = new LinkedList<Dispo>();
         this.euristica = new Heuristic(sc, lhc);
         this.constr_prop = new ConstraintPropagation(this.euristica);
         this.forward = new ForwardChecking();
+        this.sol_cost = 0;
     }
 
-    public Dispo dfsVist(Node root, List<Dispo> available_slot, List<Subject> to_assign, String preprint, Dispo last_assigned, List<LeisureClass> scuola)
+    public Dispo dfsVist(Node root, List<Dispo> available_slot, List<Subject> to_assign, String preprint, Dispo last_assigned, List<LeisureClass> scuola, double cost)
     {
+        while (!condition_running)
+        {
+            try{
+                Thread.currentThread().sleep(500);//sleep for 500 ms
+            }
+            catch(InterruptedException ie){ }
+        }
         //System.out.println("Slots: " + available_slot.size() + " Corsi: " + to_assign.size() + " Dominio: " + ((Subject)root.value()).dominio.size() );
+        this.subject_remaining = to_assign.size();
+        this.slot_remainig = available_slot.size();
         Dispo result = last_assigned;
+        double local_cost = 0;
         boolean removed = false;
         if (root != null)
         {
             Subject process_ss = (Subject)root.value();
-            //System.out.println(preprint + process_ss + " [" + process_ss.classe + "]");
+            if (debug_print_console)
+                System.out.println(preprint + process_ss + " [" + process_ss.classe + "]");
 
             List<Dispo> tried_dd = new LinkedList<Dispo>();
             // itero tutti valori del dominio
@@ -55,11 +75,16 @@ public class DeepSearch
                 //se la slot e' stata assegnata
                 if (temp_ds != null)
                 {
+                    //local_cost += 0;
+                    local_cost += temp_ds.added_cost;
+                    //System.out.println
                     available_slot.remove(temp_ds);
                     process_ss.insegnante.teach_time.add(temp_ds);
                     this.timetable[process_ss.classe.id-1][temp_ds.j.numDay-1][temp_ds.h.h-1] = process_ss.name;
-                    this.backjumping.add(0,temp_ds);
-                    //System.out.println(preprint + "***" + temp_ds + " [" + temp_ds.cc + "]*** ");
+                    process_ss.classe.timetable[temp_ds.j.numDay-1][temp_ds.h.h-1] = process_ss.name;
+                    this.backjumping.add(0, temp_ds);
+                    if (debug_print_console)
+                        System.out.println(preprint + "***" + temp_ds + " [" + temp_ds.cc + "]*** ");
                     // remove the assigned Dispo from all the subject
                     constr_prop.updateDomain(to_assign, temp_ds, true);
                     // update all in-conflict Dispo from the assigned subject domain
@@ -77,21 +102,27 @@ public class DeepSearch
                         Subject figghio = euristica.generateChild(root, to_assign);
                         if (figghio != null)
                         {
-                            result = this.dfsVist(new Node (root, figghio), available_slot, to_assign, preprint + " ", temp_ds, scuola);
-                            // se null allora timetable completa
-                            root.deleteChildrens();
-                            if (result == null)
-                            {
-                                to_try = false;
-                            }
-                            else
-                            {
-                                // backtracking
-                                if (result != temp_ds && result != this.template)
+                            /*if ((cost + local_cost) < 75)
+                            {*/
+                                result = this.dfsVist(new Node (root, figghio), available_slot, to_assign, preprint + " ", temp_ds, scuola, cost + local_cost);
+                                // se null allora timetable completa
+                                if (result == null)
                                 {
                                     to_try = false;
                                 }
-                            }
+                                else
+                                {
+                                    // backtracking
+                                    if (result != temp_ds && result != this.template)
+                                    {
+                                        to_try = false;
+                                    }
+                                }
+                            /*}
+                            else
+                            {
+                                to_try = false;
+                            }*/
                         }
                         else
                         {
@@ -102,6 +133,7 @@ public class DeepSearch
                     {
                         // timetable completa
                         result = null;
+                        sol_cost = cost + local_cost;
                         System.out.println(preprint + "Slot disponibili: " + available_slot.size() + " corsi non assegnati: " + to_assign.size());
                     }
                     if (result != null)
@@ -114,14 +146,17 @@ public class DeepSearch
                         process_ss.dominio.addAll(pre_domain);
                         if (removed)
                         {
+                            //System.out.println("readding ... " + process_ss + ":" + to_assign.contains(process_ss));
                             if (!to_assign.contains(process_ss))
+                            {
+                                //  System.out.println("Readded");
                                 to_assign.add(process_ss);
+                                removed = false;
+                            }
                         }
-                        if ( result != null )
-                        {
-                            this.timetable[process_ss.classe.id-1][temp_ds.j.numDay-1][temp_ds.h.h-1] = null;
-                            process_ss.insegnante.teach_time.remove(temp_ds);
-                        }
+                        this.timetable[process_ss.classe.id-1][temp_ds.j.numDay-1][temp_ds.h.h-1] = null;
+                        process_ss.classe.timetable[temp_ds.j.numDay-1][temp_ds.h.h-1] = null;
+                        process_ss.insegnante.teach_time.remove(temp_ds);
                     }
                 }
                 // slot orario non assegnato
@@ -129,7 +164,7 @@ public class DeepSearch
                 {
                     //backjumping
                     result = this.backCheck(process_ss);
-/*                  System.out.print(preprint + "Slot disponibili: " + available_slot.size());
+/*                    System.out.print(preprint + "Slot disponibili: " + available_slot.size());
                     Iterator<Dispo> itt = available_slot.iterator();
                     while(itt.hasNext())
                     {
@@ -228,5 +263,4 @@ public class DeepSearch
         }
         return result;//this.template;
     }
-
 }

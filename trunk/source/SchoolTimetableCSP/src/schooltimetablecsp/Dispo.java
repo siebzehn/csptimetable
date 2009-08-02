@@ -16,6 +16,7 @@ public class Dispo implements Comparable
 	protected Day j;
     protected Subject s;
     protected LeisureClass cc;
+    protected double added_cost;
 
 	public Dispo(Day j, FlexiTime h, int k, LeisureClass c)
     {
@@ -24,6 +25,7 @@ public class Dispo implements Comparable
         this.s=null;
         this.key = k;
         this.cc = c;
+        this.added_cost = 0;
 	}
 
 	public int compareTo(Object o)
