@@ -26,7 +26,7 @@ public class DeepSearch
     Heuristic euristica;
     ConstraintPropagation constr_prop;
     ForwardChecking forward;
-    double sol_cost;
+    public static double sol_cost;
 
     public DeepSearch(double sc, double lhc, int classi)
     {
@@ -54,6 +54,7 @@ public class DeepSearch
         this.slot_remainig = available_slot.size();
         Dispo result = last_assigned;
         double local_cost = 0;
+        this.sol_cost = cost;
         boolean removed = false;
         if (root != null)
         {
@@ -102,7 +103,7 @@ public class DeepSearch
                         Subject figghio = euristica.generateChild(root, to_assign);
                         if (figghio != null)
                         {
-                            /*if ((cost + local_cost) < 75)
+                         /*   if ((cost + local_cost) < 95)
                             {*/
                                 result = this.dfsVist(new Node (root, figghio), available_slot, to_assign, preprint + " ", temp_ds, scuola, cost + local_cost);
                                 // se null allora timetable completa
@@ -118,8 +119,8 @@ public class DeepSearch
                                         to_try = false;
                                     }
                                 }
-                            /*}
-                            else
+                            //}
+                            /*else
                             {
                                 to_try = false;
                             }*/
@@ -133,7 +134,7 @@ public class DeepSearch
                     {
                         // timetable completa
                         result = null;
-                        sol_cost = cost + local_cost;
+                        this.sol_cost = cost + local_cost;
                         System.out.println(preprint + "Slot disponibili: " + available_slot.size() + " corsi non assegnati: " + to_assign.size());
                     }
                     if (result != null)

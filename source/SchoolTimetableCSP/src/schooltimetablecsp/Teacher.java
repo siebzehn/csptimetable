@@ -20,6 +20,7 @@ public class Teacher {
     protected int tot_slot;
     protected List<Subject> modules;
     protected List<Dispo> teach_time;
+    protected String timetable [][];
 
     public Teacher(int i, String n, Day d)//, int s)
     {
@@ -29,6 +30,7 @@ public class Teacher {
 //        this.tot_slot = s;
         this.modules = new LinkedList<Subject>();
         this.teach_time = new LinkedList<Dispo>();
+        this.timetable = new String[6][8];
     }
 
     public boolean checkConflict(Dispo dd)
@@ -82,13 +84,11 @@ public class Teacher {
 
     public void printTimeTable(List<Dispo> ddl)
     {
-        String timetable [][] = new String[6][5];
-
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 8; i++)
         {
             for (int j = 0; j < 6; j++)
             {
-                timetable[j][i] = null;
+                this.timetable[j][i] = null;
             }
         }
 
