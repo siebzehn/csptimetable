@@ -26,7 +26,9 @@ public class ResultCollector implements Runnable
             SchoolTimeTableUI.teacherText.setText(Integer.toString(TeacherUI.all_teacher.size()));
             SchoolTimeTableUI.subjectText.setText(Integer.toString(DeepSearch.subject_remaining));
             SchoolTimeTableUI.slotText.setText(Integer.toString(DeepSearch.slot_remainig));
-            SchoolTimeTableUI.timeText.setText(Long.toString((System.currentTimeMillis()-Solver.start)/1000));
+            SchoolTimeTableUI.costText.setText(Double.toString(DeepSearch.sol_cost));
+            if (Solver.start > 0)
+                SchoolTimeTableUI.timeText.setText(Long.toString((System.currentTimeMillis()-Solver.start)/1000));
             try {
                 Thread.sleep(100);
             } catch (InterruptedException ex) {
@@ -46,7 +48,7 @@ public class ResultCollector implements Runnable
         SchoolTimeTableUI.subjectText.setText(Integer.toString(0));
         SchoolTimeTableUI.slotText.setText(Integer.toString(0));
 
-        SchoolTimeTableUI.costText.setText(Integer.toString(0));
+        SchoolTimeTableUI.costText.setText(Double.toString(DeepSearch.sol_cost));
         SchoolTimeTableUI.timeText.setText(Long.toString(Solver.seconds));
     }
 }

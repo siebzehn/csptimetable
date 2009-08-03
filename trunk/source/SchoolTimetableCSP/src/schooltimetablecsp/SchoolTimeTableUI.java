@@ -73,6 +73,7 @@ public class SchoolTimeTableUI extends javax.swing.JFrame {
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuItem6 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
 
@@ -85,7 +86,7 @@ public class SchoolTimeTableUI extends javax.swing.JFrame {
         jMenuBar2.add(jMenu4);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("null");
+        setTitle("School Time Table"); // NOI18N
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 formWindowClosing(evt);
@@ -215,6 +216,14 @@ public class SchoolTimeTableUI extends javax.swing.JFrame {
             }
         });
         jMenu1.add(jMenuItem5);
+
+        jMenuItem6.setText("Teachers");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem6);
 
         jMenuItem2.setText("Exit");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
@@ -507,6 +516,20 @@ public class SchoolTimeTableUI extends javax.swing.JFrame {
         jButton4.setEnabled(true);*/
     }//GEN-LAST:event_jButton5ActionPerformed
 
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        if (TeacherUI.all_teacher.size() > 0)
+        {
+            TeacherViewUI conf = new TeacherViewUI();
+            conf.setVisible(true);
+            conf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(null, "No teacher present.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -548,6 +571,7 @@ public class SchoolTimeTableUI extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
     private static javax.swing.JTabbedPane jTabbedPane;
     private javax.swing.JTextField jTextField1;
     public static javax.swing.JTextField slotText;

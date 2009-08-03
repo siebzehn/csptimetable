@@ -148,15 +148,15 @@ public class Heuristic
                                 //verifica che non ci siano gia' piu' di due ore in quel giorno
                                 if (this.day.valid(ss, dd.j) < 2)
                                 {
-                                    /*if (this.happy_teacher.valid( ss, dd) ) //.j) == 0 )
-                                    {*/
-                                        res = this.not_last.valid(ss, dd, "") + this.spread_day.valid(ss, dd.j, ""); //res = res && true;
-                                    /*}
+                                    if (this.happy_teacher.valid( ss, dd) ) //.j) == 0 )
+                                    {
+                                        res = this.not_last.valid(ss, dd, "") + this.spread_day.valid(ss, dd.j, "") ; //res = res && true;
+                                    }
                                     else
                                     {
-                                        res = false;
+                                        res = -1;
                                         break;
-                                    }*/
+                                    }
                                 }
                                 else
                                 {
